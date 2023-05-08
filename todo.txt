@@ -1,0 +1,42 @@
+- after signup, create a new user in my backend
+- after login/signup, fetch additional user info from my backend
+
+
+- sign in with google/apple/email
+- natively with tiles
+
+onboarding
+- screen for
+    - first and last name
+    - birthday
+    - choose your therapist
+        - therapist details
+    
+- home page
+    - make pretty
+    - show session history
+    - appointments (future)
+
+- chat page
+    - make pretty
+    - make modal so harder to leave with button up top
+    - show therapist name and icon
+    - auto scroll to bottom
+    - nicer background
+    - improve text box
+
+- other
+    - at the end of a session, send chat data to backend
+        - get old history
+        - allow chatgpt to summarize new chat and combine with existing memory
+        - save as users context
+
+- therapist
+    - give therapists more personality
+    - find 5 traits and vary them for each therapist
+
+- prompt
+    - improve prompt, maybe slightly shorter messages and less formal
+    - allow for sending multiple messages
+    - include more context cues for conversation - local time, weather, user name and age
+    - integrate user history
