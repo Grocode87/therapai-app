@@ -193,13 +193,13 @@ const ChatScreen = ({ navigation }) => {
   }, []);
 
   useEffect(() => {
-    if (userData.active_session?.chat_log.length == 0) {
+    if (userData.active_session?.chat_log?.length == 0) {
       createRespone();
     }
   }, [userData]);
 
   useEffect(() => {
-    if (messages.length > 0) {
+    if (messages?.length > 0) {
       if (messages.at(-1).author == "Me") {
         // Chat log has been updated, last message is from the user, create a response
         createRespone();

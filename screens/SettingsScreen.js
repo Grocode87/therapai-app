@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { LinearGradient } from "expo-linear-gradient";
 import {
+  Linking,
   ScrollView,
   StyleSheet,
   Text,
@@ -11,6 +12,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useAuth } from "../context/authContext";
 import { getUserData } from "../services/api";
+import { formatDate } from "../utils/utils";
 
 const SettingsItemInfo = ({ contentLeft, contentRight, onPress }) => {
   return (
@@ -58,11 +60,28 @@ const SettingsSection = ({ title, children }) => {
 };
 
 const SettingsScreen = () => {
-  const { user } = useAuth();
+  const { user, logout } = useAuth();
   const { data: userData } = useQuery(["userData"], async () => {
     token = await user.getIdToken();
     return getUserData(token, user.uid);
   });
+
+  const handlePrivacyPolicyPress = () => {
+    Linking.openURL("https://www.therapai.ca/privacy-policy");
+  };
+  const handleToSPress = () => {
+    Linking.openURL("https://www.therapai.ca/terms-of-service");
+  };
+  const handleFeedbackPress = () => {
+    Linking.openURL("https://wp6snie0e0s.typeform.com/to/VAFQVe5m");
+  };
+  const handleContactSupportPress = () => {
+    Linking.openURL("mailto:support@therapai.ca");
+  };
+
+  const handleSignOutPress = () => {
+    logout();
+  };
 
   return (
     <LinearGradient colors={["#89CFF0", "#89CFF0"]} style={{ flex: 1 }}>
@@ -77,8 +96,10 @@ const SettingsScreen = () => {
               contentLeft="Last Name"
               contentRight={userData.last_name}
             />
-            <SettingsItemInfo contentLeft="Age" contentRight={userData.age} />
-            <SettingsItemInfo contentLeft="Phone Number" contentRight="idk" />
+            <SettingsItemInfo
+              contentLeft="Birthday"
+              contentRight={formatDate(new Date(userData.birthday))}
+            />
           </SettingsSection>
 
           <SettingsSection title="Feedback">
@@ -91,21 +112,31 @@ const SettingsScreen = () => {
             <SettingsItemInfo
               contentLeft="Submit Feedback"
               contentRight="Go to form"
+              onPress={handleFeedbackPress}
             />
             <SettingsItemInfo
               contentLeft="Something's Wrong"
               contentRight="Contact support"
+              onPress={handleContactSupportPress}
             />
           </SettingsSection>
 
           <SettingsSection title="About">
-            <SettingsItemArrow content="Privacy Policy" />
-            <SettingsItemArrow content="Terms of Service" />
+            <SettingsItemArrow
+              content="Privacy Policy"
+              onPress={handlePrivacyPolicyPress}
+            />
+            <SettingsItemArrow
+              content="Terms of Service"
+              onPress={handleToSPress}
+            />
           </SettingsSection>
 
           <SettingsSection title="Leave">
-            <SettingsItemInfo contentLeft="Sign Out" />
-            <SettingsItemInfo contentLeft="Delete Account" />
+            <SettingsItemInfo
+              contentLeft="Sign Out"
+              onPress={handleSignOutPress}
+            />
           </SettingsSection>
         </SafeAreaView>
       </ScrollView>
@@ -150,6 +181,7 @@ const styles = StyleSheet.create({
   settingsItemArrow: {
     flexDirection: "row",
     justifyContent: "space-between",
+    alignItems: "center",
   },
   settingsItemArrowText: {
     fontSize: 16,

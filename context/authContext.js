@@ -75,17 +75,8 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const refresh = async () => {
-    // fetch userData from db, set it to userData
-
-    // get users token
-    const token = await user.getIdToken();
-
-    // fetch additional user info from our backend
-    const response = await getUser(token, user.uid);
-
-    // add additional user info
-    setUserData(response.data);
+  const logout = () => {
+    auth.signOut();
   };
 
   const value = {
@@ -93,6 +84,7 @@ export const AuthProvider = ({ children }) => {
     loading,
     login,
     register,
+    logout,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

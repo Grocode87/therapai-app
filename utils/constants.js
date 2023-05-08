@@ -1,3 +1,5 @@
+import { image1, image2, image3, image4 } from "./imageResources";
+
 const therapist_traits = {
   Directiveness: {
     name: "Directiveness",
@@ -31,10 +33,11 @@ const therapist_traits = {
 
 const therapists = [
   {
-    name: "Dr. Harmony",
+    name: "Luna",
     tagline: "The Empathetic Healer",
+    image: image1,
     description:
-      "Warm, kind, and understanding. Dr. Harmony is always ready to lend a patient ear, offering compassion and empathy to everyone she interacts with.  Primarily uses person-centered therapy, focused on providing a safe and supportive environment for clients to explore their feelings.",
+      "Warm, kind, and understanding. Dr. Luna is always ready to lend a patient ear, offering compassion and empathy to everyone she interacts with.  Primarily uses person-centered therapy, focused on providing a safe and supportive environment for clients to explore their feelings.",
     traits: {
       Directiveness: 3,
       Focus: 4,
@@ -43,10 +46,11 @@ const therapists = [
     },
   },
   {
-    name: "Dr. Insight",
+    name: "Pepper",
     tagline: "The Analytical Explorer",
+    image: image2,
     description:
-      "Thoughtful, observant, and logical. Dr. Insight is deeply curious about the human mind and its complexities. Leverages cognitive-behavioral therapy, helping clients identify and challenge negative thought patterns to improve mental health.",
+      "Thoughtful, observant, and logical. Dr. Pepper is deeply curious about the human mind and its complexities. Leverages cognitive-behavioral therapy, helping clients identify and challenge negative thought patterns to improve mental health.",
     traits: {
       Directiveness: 8,
       Focus: 6,
@@ -55,10 +59,11 @@ const therapists = [
     },
   },
   {
-    name: "Dr. Clarity",
+    name: "Ziggy",
     tagline: "The Clear Communicator",
+    image: image3,
     description:
-      "Direct, clear, and assertive. Dr. Clarity believes in communicating openly and honestly, helping clients understand and confront their issues head-on. Uses solution-focused brief therapy, emphasizing clear, concise, and direct communication to help clients find practical solutions to their problems.",
+      "Direct, clear, and assertive. Dr. Ziggy believes in communicating openly and honestly, helping clients understand and confront their issues head-on. Uses solution-focused brief therapy, emphasizing clear, concise, and direct communication to help clients find practical solutions to their problems.",
     traits: {
       Directiveness: 7,
       Focus: 9,
@@ -67,10 +72,11 @@ const therapists = [
     },
   },
   {
-    name: "Dr. Flex",
+    name: "Theo",
     tagline: "The Adaptive Facilitator",
+    image: image4,
     description:
-      "Open-minded, flexible, and adaptable. Dr. Flex is adept at adjusting his approach to fit the unique needs and circumstances of each client. Uses integrative therapy, blending elements from different therapeutic approaches to create a customized treatment plan for each client.",
+      "Open-minded, flexible, and adaptable. Dr. Theo is adept at adjusting his approach to fit the unique needs and circumstances of each client. Uses integrative therapy, blending elements from different therapeutic approaches to create a customized treatment plan for each client.",
     traits: {
       Directiveness: 5,
       Focus: 7,

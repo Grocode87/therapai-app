@@ -17,6 +17,7 @@ import CustomButton from "../components/CustomButton";
 import { updateUserData } from "../services/api";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useAuth } from "../context/authContext";
+import TherapistImage from "../components/TherapistImage";
 
 const TraitScale = ({ trait, level }) => {
   return (
@@ -40,7 +41,9 @@ const TraitScale = ({ trait, level }) => {
             backgroundColor: "white",
           }}
         />
-        <View style={{ width: 4, height: "100%", backgroundColor: "orange" }} />
+        <View
+          style={{ width: 4, height: "100%", backgroundColor: "#3f3f3f" }}
+        />
         <View
           style={{
             width: ((10 - level) * 10 - 1.5).toString() + "%",
@@ -97,16 +100,7 @@ const TherapistDetailScreen = ({ navigation, route }) => {
         <SafeAreaView>
           <View style={{ flex: 1, flexDirection: "row", alignItems: "center" }}>
             <View style={{ width: "20%" }}>
-              <Image
-                style={{
-                  width: "100%",
-                  aspectRatio: 1,
-                  borderRadius: 50,
-                }}
-                source={{
-                  uri: "https://picsum.photos/200",
-                }}
-              />
+              <TherapistImage therapist={therapist} />
             </View>
             <View
               style={{

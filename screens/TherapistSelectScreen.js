@@ -12,43 +12,12 @@ import {
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { therapists, therapist_traits } from "../utils/constants";
+import TherapistImage from "../components/TherapistImage";
+import { useQuery } from "@tanstack/react-query";
+import { useAuth } from "../context/authContext";
+import { getUserData } from "../services/api";
 
-const TherapistCard = ({ therapist, navigation }) => {
-  const expandedView = () => {
-    return (
-      <View>
-        <Text style={{ color: "white", paddingTop: 10 }}>
-          {therapist.description}
-        </Text>
-
-        <Text
-          style={{
-            color: "white",
-            fontSize: 16,
-            fontWeight: "500",
-            marginTop: 20,
-          }}
-        >
-          Traits
-        </Text>
-        <View
-          style={{
-            flexDirection: "column",
-            gap: 10,
-          }}
-        >
-          {Object.entries(therapist.traits).map(([trait, level], idx) => {
-            return (
-              <View key={idx} style={{}}>
-                <TraitScale trait={therapist_traits[trait]} level={level} />
-              </View>
-            );
-          })}
-        </View>
-      </View>
-    );
-  };
-
+const TherapistCard = ({ therapist, navigation, selected }) => {
   return (
     <TouchableOpacity
       onPress={() => {
@@ -60,25 +29,18 @@ const TherapistCard = ({ therapist, navigation }) => {
           backgroundColor: "rgba(5, 0, 255, 0.13)",
           borderRadius: 10,
           padding: 20,
+          borderWidth: selected ? 2 : 0,
+          borderColor: "#fff",
         }}
       >
         <View style={{ flex: 1, flexDirection: "row", alignItems: "center" }}>
-          <View style={{ width: "20%" }}>
-            <Image
-              style={{
-                width: "100%",
-                aspectRatio: 1,
-                borderRadius: 50,
-              }}
-              source={{
-                uri: "https://picsum.photos/200",
-              }}
-            />
+          <View style={{ flex: 1 }}>
+            <TherapistImage therapist={therapist} />
           </View>
           <View
             style={{
               marginLeft: 20,
-              flex: 1,
+              flex: 4,
               flexDirection: "column",
             }}
           >
@@ -90,7 +52,10 @@ const TherapistCard = ({ therapist, navigation }) => {
                 paddingBottom: 5,
               }}
             >
-              {therapist.name}
+              {therapist.name}{" "}
+              <Text style={{ fontWeight: "normal" }}>
+                {selected && "(Current)"}
+              </Text>
             </Text>
             <Text style={{ color: "white" }}>{therapist.tagline}</Text>
           </View>
@@ -101,9 +66,15 @@ const TherapistCard = ({ therapist, navigation }) => {
 };
 
 const TherapistSelectScreen = ({ navigation }) => {
+  const { user } = useAuth();
+  const { data: userData } = useQuery(["userData"], async () => {
+    token = await user.getIdToken();
+    return getUserData(token, user.uid);
+  });
+
   return (
     <LinearGradient colors={["#89CFF0", "#2291C5"]} style={{ flex: 1 }}>
-      <ScrollView style={{ padding: 20 }}>
+      <ScrollView style={{ padding: 20, paddingHorizontal: 10 }}>
         <SafeAreaView>
           <View style={{ alignItems: "center" }}>
             <Text
@@ -119,12 +90,13 @@ const TherapistSelectScreen = ({ navigation }) => {
             </Text>
           </View>
 
-          <View style={{ gap: 20, marginBottom: 20 }}>
+          <View style={{ gap: 10, marginBottom: 20 }}>
             {therapists.map((therapist, idx) => (
               <TherapistCard
                 therapist={therapist}
                 key={idx}
                 navigation={navigation}
+                selected={userData?.therapist === therapist.name}
               />
             ))}
           </View>

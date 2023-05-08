@@ -62,6 +62,7 @@ function OnboardingNavigator() {
         contentStyle: {
           backgroundColor: "#89CFF0",
         },
+        headerTintColor: "white",
       }}
     >
       <OnboardingStack.Screen
@@ -124,6 +125,7 @@ function PrivateNavigator({ userData }) {
         component={SettingsScreen}
         options={{
           headerLargeTitle: true,
+          headerLargeTitleShadowVisible: false,
           headerTintColor: "white",
           headerStyle: {
             backgroundColor: "#89CFF0",
@@ -158,7 +160,7 @@ const RootNavigator = () => {
   );
 
   let onboardingComplete =
-    userData?.first_name && userData?.last_name && userData?.age;
+    userData?.first_name && userData?.last_name && userData?.birthday;
 
   return (
     <RootStack.Navigator headerMode="none" headerShown={false}>
@@ -169,7 +171,7 @@ const RootNavigator = () => {
           options={{ headerShown: false }}
         />
       ) : //
-      user && userData ? (
+      user && userData && !userDataLoading ? (
         onboardingComplete ? (
           <RootStack.Screen
             name="Private"

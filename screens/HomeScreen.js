@@ -21,6 +21,8 @@ import { getUserData, processSession } from "../services/api";
 import moment from "moment/moment";
 import { useUserHistory } from "../hooks/useUserHistory";
 import Journal from "../components/home/Journal";
+import TherapistImage from "../components/TherapistImage";
+import { therapists } from "../utils/constants";
 
 const HomeScreen = ({ navigation }) => {
   const { user } = useAuth();
@@ -144,15 +146,10 @@ const HomeScreen = ({ navigation }) => {
               </View>
               <View style={{ flex: 1, flexDirection: "row", marginTop: 20 }}>
                 <View style={{ width: "35%" }}>
-                  <Image
-                    style={{
-                      width: "100%",
-                      aspectRatio: 1,
-                      borderRadius: 50,
-                    }}
-                    source={{
-                      uri: "https://picsum.photos/200",
-                    }}
+                  <TherapistImage
+                    therapist={therapists.find(
+                      (therapist) => therapist.name === userData.therapist
+                    )}
                   />
                 </View>
                 <View
@@ -189,7 +186,9 @@ const HomeScreen = ({ navigation }) => {
 
             <View style={styles.card}>
               <Text style={styles.card_title}>Your Journal</Text>
-              <Journal />
+              <View style={{ paddingTop: 10 }}>
+                <Journal />
+              </View>
             </View>
           </View>
         </ScrollView>
@@ -222,19 +221,17 @@ const HomeScreen = ({ navigation }) => {
               style={{
                 padding: 15,
                 flexDirection: "row",
+                alignItems: "center",
               }}
             >
-              <Image
-                style={{
-                  height: "100%",
-                  aspectRatio: 1,
-                  borderRadius: 50,
-                }}
-                source={{
-                  uri: "https://picsum.photos/200",
-                }}
-              />
-              <View style={{ paddingLeft: 15 }}>
+              <View style={{ width: "20%" }}>
+                <TherapistImage
+                  therapist={therapists.find(
+                    (therapist) => therapist.name === userData.therapist
+                  )}
+                />
+              </View>
+              <View style={{ paddingLeft: 15, flexDirection: "column" }}>
                 <Text style={{ fontWeight: "500", fontSize: 16 }}>
                   Continue Conversation?
                 </Text>
@@ -308,10 +305,19 @@ const styles = StyleSheet.create({
   },
 
   card: {
-    backgroundColor: "rgba(5, 0, 255, 0.13)",
+    backgroundColor: "#57A0E4",
     borderRadius: 10,
     padding: 20,
     marginBottom: 40,
+
+    // iOS shadow properties
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.2,
+    shadowRadius: 8,
+
+    // Android elevation
+    elevation: 5,
   },
   card_title: {
     fontSize: 20,

@@ -24,14 +24,17 @@ import { useAlert } from "../context/alertContext";
 import { useAuth } from "../context/authContext";
 import { getUserData, updateUserData } from "../services/api";
 
+import DateTimePicker from "@react-native-community/datetimepicker";
+import { formatDate } from "../utils/utils";
+
 const OnboardScreen = ({ navigation }) => {
   const { user } = useAuth();
-  const [currPage, setCurrPage] = useState(0);
+  const [currPage, setCurrPage] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
 
   const [firstName, setFirstName] = useState(userData?.first_name || "");
   const [lastName, setLastName] = useState(userData?.last_name || "");
-  const [age, setAge] = useState(userData?.age || "");
+  const [date, setDate] = useState(new Date(2000, 5, 15));
 
   const scrollViewRef = useRef();
 
@@ -77,7 +80,7 @@ const OnboardScreen = ({ navigation }) => {
   // currPage defaults to 0
   // 0: first name
   // 1: last name
-  // 2: age
+  // 2: birthday
   // 3: done
 
   const scrollToNextPage = () => {
@@ -162,30 +165,73 @@ const OnboardScreen = ({ navigation }) => {
     );
   };
 
+  const onChangeDate = (event, selectedDate) => {
+    const currentDate = selectedDate;
+    setDate(currentDate);
+  };
+
   const renderPage3 = () => {
     return (
       <SafeAreaView
-        style={[styles.container, { width: Dimensions.get("window").width }]}
+        style={[
+          {
+            flex: 1,
+            height: "100%",
+            alignItems: "center",
+            flexDirection: "column",
+            justifyContent: "space-between",
+          },
+          { width: Dimensions.get("window").width },
+        ]}
       >
-        <Text style={styles.main_text}>Lets get you set up</Text>
-        <Text style={styles.main_text_bold}>Whats your age?</Text>
-        <View style={styles.input_container}>
-          <Text style={styles.input_label}>Age</Text>
-          <TextInput
-            style={styles.text_input}
-            value={age}
-            onChangeText={setAge}
-          />
-          <CustomButton
-            style={styles.next_button}
-            isLoading={isLoading}
-            text="Finish"
-            onPress={() => {
-              if (age.length > 1) {
-                // string to text js
-                userDataMutation.mutate({ ...userData, age: parseInt(age) });
-              }
-            }}
+        <View
+          style={{
+            alignItems: "center",
+            flex: 1,
+            width: "100%",
+            justifyContent: "center",
+          }}
+        >
+          <Text style={styles.main_text}>Lets get you set up</Text>
+          <Text style={styles.main_text_bold}>When where you born?</Text>
+          <View style={styles.input_container}>
+            <Text style={styles.input_label}>Birthday</Text>
+            <View
+              style={{
+                height: 40,
+                borderBottomColor: "white",
+                borderBottomWidth: 2,
+                fontSize: 24,
+                marginBottom: 60,
+                flexDirection: "row",
+                alignItems: "flex-end",
+              }}
+            >
+              <Text style={{ fontSize: 24, color: "white" }}>
+                {formatDate(date)}
+              </Text>
+            </View>
+            <CustomButton
+              style={styles.next_button}
+              isLoading={isLoading}
+              text="Finish"
+              onPress={() => {
+                userDataMutation.mutate({
+                  ...userData,
+                  birthday: date.toISOString(),
+                });
+              }}
+            />
+          </View>
+        </View>
+        <View>
+          <DateTimePicker
+            testID="dateTimePicker"
+            value={date}
+            mode="date"
+            display="spinner"
+            onChange={onChangeDate}
+            textColor="white"
           />
         </View>
       </SafeAreaView>

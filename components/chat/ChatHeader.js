@@ -1,5 +1,7 @@
 import { Image, Text, TouchableOpacity, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { therapists } from "../../utils/constants";
+import TherapistImage from "../TherapistImage";
 
 const ChatHeader = ({ onEndSession, sessionData }) => {
   const insets = useSafeAreaInsets();
@@ -25,21 +27,18 @@ const ChatHeader = ({ onEndSession, sessionData }) => {
           height: "100%",
         }}
       >
-        <Image
-          style={{
-            aspectRatio: 1,
-            width: 40,
-            borderRadius: 20,
-          }}
-          source={{
-            uri: "https://picsum.photos/200",
-          }}
-        />
+        <View style={{ width: 40, height: 40 }}>
+          <TherapistImage
+            therapist={therapists.find(
+              (therapist) => therapist.name === sessionData?.therapist
+            )}
+          />
+        </View>
         <Text
           style={{
             fontSize: 20,
             fontWeight: "bold",
-            marginLeft: 20,
+            marginLeft: 10,
             color: "white",
           }}
         >
