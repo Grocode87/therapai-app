@@ -6,7 +6,6 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import HomeScreen from "../screens/HomeScreen";
 import ChatScreen from "../screens/ChatScreen";
 import RegisterScreen from "../screens/RegisterScreen";
-import LoginScreen from "../screens/LoginScreen";
 import { useAuth } from "../context/authContext";
 import OnboardScreen from "../screens/OnboardScreen";
 import { getUserData } from "../services/api";
@@ -17,6 +16,8 @@ import SplashScreen from "../screens/SplashScreen";
 import TherapistSelectScreen from "../screens/TherapistSelectScreen";
 import TherapistDetailScreen from "../screens/TherapistDetailScren";
 import SettingsScreen from "../screens/SettingsScreen";
+import { useAlert } from "../context/alertContext";
+import { useUserData } from "../hooks/useUserData";
 
 const RootStack = createNativeStackNavigator();
 const PublicStack = createNativeStackNavigator();
@@ -51,7 +52,6 @@ function PublicNavigator() {
           headerTintColor: "white",
         }}
       />
-      <PublicStack.Screen name="Login" component={LoginScreen} />
     </PublicStack.Navigator>
   );
 }
@@ -148,16 +148,7 @@ function PrivateNavigator({ userData }) {
 
 const RootNavigator = () => {
   const { user, loading } = useAuth();
-  const { data: userData, isLoading: userDataLoading } = useQuery(
-    ["userData"],
-    async () => {
-      const token = await user.getIdToken();
-      return getUserData(token, user.uid);
-    },
-    {
-      enabled: user != null,
-    }
-  );
+  const { userData, userDataLoading } = useUserData()
 
   let onboardingComplete =
     userData?.first_name && userData?.last_name && userData?.birthday;
@@ -203,6 +194,7 @@ const RootNavigator = () => {
 };
 
 export default function Navigation() {
+  
   return (
     <NavigationContainer>
       <RootNavigator />

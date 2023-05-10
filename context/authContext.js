@@ -1,13 +1,11 @@
 import React, { createContext, useState, useEffect, useContext } from "react";
-import { onAuthStateChanged } from "firebase/auth";
-import { auth } from "../services/firebase";
-import { getUser, updateSession, updateUser } from "../services/api";
+import auth from '@react-native-firebase/auth';
 import {
-  decryptString,
   deriveAndStoreKey,
-  encryptString,
   getKey,
 } from "../services/encrypt";
+import { useAlert } from "./alertContext";
+
 
 const AuthContext = createContext();
 
@@ -17,73 +15,83 @@ export const useAuth = () => {
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
-  const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [confirm, setConfirm] = useState(null);
 
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      setUser(user);
-      setLoading(false);
+  const { setAlert } = useAlert();
 
-      if (user) {
+  function onAuthStateChanged(user) {
+    console.log("auth state changed")
+    console.log("user:", user)
+    setUser(user);
+    setLoading(false);
+
+    if (user) {
         console.log("user is logged in, ckecking key");
         getKey().then((credentials) => {
-          console.log("recieved key", credentials);
           if (!credentials) {
-            console.log("generating");
             deriveAndStoreKey(user.phoneNumber, user.uid);
-          } else {
-            console.log("testing encrypt + decrypt");
-            const plainText = "Hello, world!";
-            encryptString(plainText).then((encrypted) => {
-              console.log("encrypted", encrypted);
-              decryptString(encrypted).then((decrypted) => {
-                console.log("decrypted", decrypted);
-              });
-            });
-          }
+          } 
         });
       }
-    });
+  }
 
-    return () => unsubscribe();
+  useEffect(() => {
+    const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
+    return subscriber; // unsubscribe on unmount
   }, []);
 
-  const login = async (email, password) => {
-    try {
-      const userCredential = await signInWithEmailAndPassword(
-        auth,
-        email,
-        password
-      );
-      return userCredential.user;
-    } catch (error) {
-      return error;
-    }
-  };
 
-  const register = async (email, password) => {
+
+  const signInWithPhoneNumber = async (phoneNumber) => {
     try {
-      const userCredential = await createUserWithEmailAndPassword(
-        auth,
-        email,
-        password
-      );
-      return userCredential.user;
+    const confirmation = await auth().signInWithPhoneNumber(phoneNumber);
+    setConfirm(confirmation);
+    return true
     } catch (error) {
-      return error;
+      console.log(phoneNumber)
+      console.log(error)
+      setAlert({
+        show: true,
+        title: "Login Error",
+        message:
+          "We've ran into an error trying to send a code to this phone number. Please try again later.",
+        type: "error",
+      });
+      return false
     }
-  };
+  }
+
+  const confirmCode = async (enteredCode) => {
+    try {
+      await confirm.confirm(enteredCode);
+    } catch (error) {
+        let errorMsg = "Something went wrong. Please try again";
+        switch (error.code) {
+          case "auth/code-expired":
+            errorMsg = "The code has expired. Please resend the code.";
+          case "auth/invalid-verification-code":
+            errorMsg = "The code you entered is invalid. Please try again.";
+        }
+        setAlert({
+          show: true,
+          title: "Login Error",
+          message: errorMsg,
+          type: "error",
+        });
+      
+    }
+  }
 
   const logout = () => {
-    auth.signOut();
+    auth().signOut();
   };
 
   const value = {
     user,
     loading,
-    login,
-    register,
+    signInWithPhoneNumber,
+    confirmCode,
     logout,
   };
 

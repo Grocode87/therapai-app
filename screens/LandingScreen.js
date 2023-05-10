@@ -11,7 +11,6 @@ import {
   Pressable,
 } from "react-native";
 import CustomButton from "../components/CustomButton";
-// createUserWIthEmailAndPassword is a firebase fun
 
 function LandingScreen({ navigation }) {
   return (
