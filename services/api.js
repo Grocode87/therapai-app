@@ -5,6 +5,8 @@ import { decryptString, encryptString } from "./encrypt";
 const apiUrl = "http://10.0.0.127:5000";
 //const apiUrl: String = "https://hh-mock-api.herokuapp.com"
 
+
+
 export async function getUserData(token, uid) {
   return axios({
     method: "get",
@@ -19,6 +21,7 @@ export async function getUserData(token, uid) {
     })
     .catch((error) => {
       console.log(error);
+     
     });
 }
 

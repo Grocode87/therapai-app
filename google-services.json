@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "528644440773",
+    "project_id": "therap-d1d30",
+    "storage_bucket": "therap-d1d30.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:528644440773:android:0984cde579ce03a5ac26ac",
+        "android_client_info": {
+          "package_name": "com.grobbed.therap"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "528644440773-ul1va04ieueos470v2tk3nriuddso46e.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB4ByRU5sSBvaIpFvFZ9F4IiZz4d6qu8SM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "528644440773-h1cvabbtcl642svfo1v8hki0co87kmfe.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "528644440773-bp086f7l34u6fatqdfd7gcck0hk07ift.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.grobbed.therap"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

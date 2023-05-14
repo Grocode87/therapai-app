@@ -1,7 +1,6 @@
 /** Register Screen */
 
 import React, { useEffect, useRef, useState } from "react";
-import { getAuth, PhoneAuthProvider, RecaptchaVerifier } from "firebase/auth";
 import {
   StyleSheet,
   Text,
@@ -12,64 +11,35 @@ import {
   SafeAreaView,
 } from "react-native";
 
-// createUserWIthEmailAndPassword is a firebase function
-import { createUserWithEmailAndPassword } from "firebase/auth";
-import { auth, firebaseConfig } from "../services/firebase";
 import { LinearGradient } from "expo-linear-gradient";
-import {
-  FirebaseRecaptchaBanner,
-  FirebaseRecaptchaVerifierModal,
-} from "expo-firebase-recaptcha";
-import SlidingAlert from "../components/SlidingAlert";
-import { useAlert } from "../context/alertContext";
+import { useAuth } from "../context/authContext";
 
 function RegisterScreen({ navigation }) {
   const [error, setError] = useState("");
   const textInputRef = useRef(null);
   const [countryCode, setCountryCode] = useState(1);
   const [phoneNumber, setPhoneNumber] = useState("");
+  const { user, signInWithPhoneNumber } = useAuth()
 
-  const recaptchaVerifierRef = useRef(null);
-  const [verificationId, setVerificationID] = useState("");
-  const attemptInvisibleVerification = false;
 
   let canSend = phoneNumber.length == 10;
 
-  const { setAlert } = useAlert();
 
   const handleSendVerificationCode = async () => {
-    if (canSend)
-      try {
-        const phoneProvider = new PhoneAuthProvider(auth); // initialize the phone provider.
-        const verificationId = await phoneProvider.verifyPhoneNumber(
-          "+" + countryCode + phoneNumber.slice(0, 10),
-          recaptchaVerifierRef.current
-        ); // get the verification id
-        setVerificationID(verificationId); // set the verification id
+    if(canSend) {
+      const success = await signInWithPhoneNumber("+" + countryCode + phoneNumber)
+
+      if(success) {
         navigation.navigate("Verify", {
-          phoneNumber: countryCode + phoneNumber,
-          verificationId: verificationId,
-        });
-      } catch (error) {
-        setError(`Error : ${error.message}`); // show the error
-        setAlert({
-          show: true,
-          title: "Login Error",
-          message:
-            "We've ran into an error trying to send a code to this phone number. Please try again later.",
-          type: "error",
+          phoneNumber: countryCode + phoneNumber
         });
       }
-  };
+      }
+  }
 
   return (
     <LinearGradient colors={["#89CFF0", "#2291C5"]} style={{ flex: 1 }}>
       <SafeAreaView style={styles.container}>
-        <FirebaseRecaptchaVerifierModal
-          ref={recaptchaVerifierRef}
-          firebaseConfig={firebaseConfig}
-          attemptInvisibleVerification={true}
-        />
 
         <Text style={styles.title}>What is your phone #?</Text>
         <Text style={styles.subTitle}>

@@ -2,43 +2,29 @@
 
 import React, { useEffect, useRef, useState } from "react";
 import {
-  getAuth,
-  PhoneAuthProvider,
-  RecaptchaVerifier,
-  signInWithCredential,
-} from "firebase/auth";
-import {
   StyleSheet,
   Text,
   View,
   TextInput,
-  Button,
   Pressable,
   SafeAreaView,
 } from "react-native";
 
-// createUserWIthEmailAndPassword is a firebase function
-import { createUserWithEmailAndPassword } from "firebase/auth";
-import { auth, firebaseConfig } from "../services/firebase";
 import { LinearGradient } from "expo-linear-gradient";
-import {
-  FirebaseRecaptchaBanner,
-  FirebaseRecaptchaVerifierModal,
-} from "expo-firebase-recaptcha";
+
 import { useAlert } from "../context/alertContext";
+import { useAuth } from "../context/authContext";
 
 function VerifyScreen({ navigation, route }) {
-  const [error, setError] = useState("");
   const textInputRef = useRef(null);
   const [code, setCode] = useState("");
 
   const [timeUntilResend, setTimeUntilResend] = useState(120);
-  const recaptchaVerifierRef = useRef(null);
+
+  const { user, signInWithPhoneNumber, confirmCode } = useAuth()
 
   const phoneNumber = route.params.phoneNumber;
-  let verificationId = route.params.verificationId;
 
-  const { setAlert } = useAlert();
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -50,58 +36,16 @@ function VerifyScreen({ navigation, route }) {
   }, []);
 
   const handleResendCode = async () => {
-    try {
-      const phoneProvider = new PhoneAuthProvider(auth); // initialize the phone provider.
-      console.log("+" + phoneNumber);
-      const newVerificationId = await phoneProvider.verifyPhoneNumber(
-        "+" + phoneNumber,
-        recaptchaVerifierRef.current
-      ); // get the verification id
-      verificationId = newVerificationId; // set the verification id
-      setTimeUntilResend(120);
-    } catch (error) {
-      setAlert({
-        show: true,
-        title: "Resend Code Error",
-        message: "Something went wrong. Please try again later.",
-        type: "error",
-      });
-    }
+    await signInWithPhoneNumber("+" + phoneNumber)
   };
 
   const handleSubmitCode = async (verificationCode) => {
-    try {
-      const credential = PhoneAuthProvider.credential(
-        verificationId,
-        verificationCode
-      );
-      await signInWithCredential(auth, credential);
-    } catch (error) {
-      let errorMsg = "Something went wrong. Please try again";
-      switch (error.code) {
-        case "auth/code-expired":
-          errorMsg = "The code has expired. Please resend the code.";
-        case "auth/invalid-verification-code":
-          errorMsg = "The code you entered is invalid. Please try again.";
-      }
-      setAlert({
-        show: true,
-        title: "Login Error",
-        message: errorMsg,
-        type: "error",
-      });
-    }
+    await confirmCode(verificationCode)
   };
 
   return (
     <LinearGradient colors={["#89CFF0", "#2291C5"]} style={{ flex: 1 }}>
       <SafeAreaView style={styles.container}>
-        <FirebaseRecaptchaVerifierModal
-          ref={recaptchaVerifierRef}
-          firebaseConfig={firebaseConfig}
-          attemptInvisibleVerification={true}
-        />
-
         <Text style={styles.title}>Enter your verification code</Text>
         <Text style={styles.subTitle}>
           Sent to{" "}

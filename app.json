@@ -15,20 +15,35 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.grobbed.therap",
+      "googleServicesFile": "./GoogleService-Info.plist"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "googleServicesFile": "./google-services.json"
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
     "plugins": [
-      "expo-build-properties",
-      "expo-localization"
-    ]
+      "expo-localization",
+      "@react-native-firebase/app",
+      "@react-native-firebase/auth",
+      ["expo-build-properties",
+      {
+        "ios": {
+          "useFrameworks": "static"
+        }
+      }]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "efe01294-e05f-4058-9605-28fa59045f94"
+      }
+    }
   }
 }
