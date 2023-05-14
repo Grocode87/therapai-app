@@ -60,6 +60,7 @@ export async function getAIResponse(messages, userData, timeZone) {
   // decrypt user context
   const user_context = await decryptString(userData.context.content || "");
 
+  console.log(user_context);
   const therapist = therapists.find(
     (therapist) => therapist.name === userData.therapist
   );
