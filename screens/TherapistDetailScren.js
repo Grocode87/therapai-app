@@ -14,10 +14,11 @@ import { CommonActions } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
 import { therapists, therapist_traits } from "../utils/constants";
 import CustomButton from "../components/CustomButton";
-import { updateUserData } from "../services/api";
+import { endSession, updateUserData } from "../services/api";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useAuth } from "../context/authContext";
 import TherapistImage from "../components/TherapistImage";
+import { useUserData } from "../hooks/useUserData";
 
 const TraitScale = ({ trait, level }) => {
   return (
@@ -67,6 +68,7 @@ const TherapistDetailScreen = ({ navigation, route }) => {
   const queryClient = useQueryClient();
   const [loading, setLoading] = useState(false);
   const { user } = useAuth();
+  const { userData } = useUserData();
 
   const updateUserMutation = useMutation(
     async (newData) => {
@@ -84,6 +86,7 @@ const TherapistDetailScreen = ({ navigation, route }) => {
   const onSelect = async () => {
     // set this as user's therapist
     setLoading(true);
+    await endSession(user, userData);
     await updateUserMutation.mutateAsync({ therapist: therapist.name });
     navigation.dispatch(
       CommonActions.reset({

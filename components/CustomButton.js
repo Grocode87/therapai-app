@@ -1,17 +1,23 @@
 import { ActivityIndicator, Button, Pressable, Text, View } from "react-native";
 
-const CustomButton = ({ text, onPress, isLoading = false }) => {
+const CustomButton = ({
+  text,
+  onPress,
+  isLoading = false,
+  disabled = false,
+}) => {
   return (
     <Pressable
-      style={{
+      style={(pressed) => ({
         width: "100%",
         height: 45,
         borderRadius: 20,
         alignItems: "center",
         justifyContent: "center",
         marginVertical: 5,
+        opacity: disabled || isLoading ? 0.5 : 1,
         backgroundColor: "#3f3f3f",
-      }}
+      })}
       onPress={onPress}
     >
       <View style={{ paddingHorizontal: 30 }}>

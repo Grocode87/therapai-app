@@ -1,15 +1,16 @@
 {
   "expo": {
-    "name": "therap",
+    "name": "Therapai",
     "slug": "therap",
-    "version": "1.0.0",
+    "description": "An AI powered therapy app",
+    "version": "1.0.1",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#499A90"
     },
     "assetBundlePatterns": [
       "**/*"

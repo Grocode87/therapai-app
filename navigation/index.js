@@ -148,7 +148,7 @@ function PrivateNavigator({ userData }) {
 
 const RootNavigator = () => {
   const { user, loading } = useAuth();
-  const { userData, userDataLoading } = useUserData()
+  const { userData, userDataLoading } = useUserData();
 
   let onboardingComplete =
     userData?.first_name && userData?.last_name && userData?.birthday;
@@ -194,7 +194,6 @@ const RootNavigator = () => {
 };
 
 export default function Navigation() {
-  
   return (
     <NavigationContainer>
       <RootNavigator />

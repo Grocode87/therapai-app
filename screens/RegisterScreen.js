@@ -13,34 +13,38 @@ import {
 
 import { LinearGradient } from "expo-linear-gradient";
 import { useAuth } from "../context/authContext";
+import CustomButton from "../components/CustomButton";
 
 function RegisterScreen({ navigation }) {
-  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+
   const textInputRef = useRef(null);
   const [countryCode, setCountryCode] = useState(1);
   const [phoneNumber, setPhoneNumber] = useState("");
-  const { user, signInWithPhoneNumber } = useAuth()
-
+  const { user, signInWithPhoneNumber } = useAuth();
 
   let canSend = phoneNumber.length == 10;
 
-
   const handleSendVerificationCode = async () => {
-    if(canSend) {
-      const success = await signInWithPhoneNumber("+" + countryCode + phoneNumber)
-
-      if(success) {
+    if (canSend) {
+      console.log("sensing verification code");
+      setLoading(true);
+      const success = await signInWithPhoneNumber(
+        "+" + countryCode + phoneNumber
+      );
+      setLoading(false);
+      if (success) {
+        console.log("success");
         navigation.navigate("Verify", {
-          phoneNumber: countryCode + phoneNumber
+          phoneNumber: countryCode + phoneNumber,
         });
       }
-      }
-  }
+    }
+  };
 
   return (
     <LinearGradient colors={["#89CFF0", "#2291C5"]} style={{ flex: 1 }}>
       <SafeAreaView style={styles.container}>
-
         <Text style={styles.title}>What is your phone #?</Text>
         <Text style={styles.subTitle}>
           We'll send you a code to make sure it's you
@@ -102,23 +106,23 @@ function RegisterScreen({ navigation }) {
           })}
         </View>
 
-        <Pressable
+        <View
           style={{
             width: "100%",
-            height: 45,
-            borderRadius: 20,
-            alignItems: "center",
-            justifyContent: "center",
             marginVertical: 5,
-            backgroundColor: "#3f3f3f",
-            opacity: canSend ? 1 : 0.5,
             marginBottom: 315,
             marginTop: 120,
+            alignItems: "center",
+            justifyContent: "center",
           }}
-          onPress={handleSendVerificationCode}
         >
-          <Text style={{ color: "white" }}>Send Code</Text>
-        </Pressable>
+          <CustomButton
+            text="Send Code"
+            onPress={handleSendVerificationCode}
+            disabled={!canSend}
+            isLoading={loading}
+          />
+        </View>
       </SafeAreaView>
     </LinearGradient>
   );

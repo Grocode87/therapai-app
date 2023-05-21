@@ -21,6 +21,7 @@ const styles = StyleSheet.create({
   },
   chatBubbleAuthor: {
     fontWeight: "bold",
+    paddingBottom: 2,
   },
   chatBubbleContent: {},
 });

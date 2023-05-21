@@ -2,10 +2,8 @@ import axios from "axios";
 import { therapists } from "../utils/constants";
 import { decryptString, encryptString } from "./encrypt";
 
-const apiUrl = "http://10.0.0.127:5000";
+const apiUrl = "http://192.168.0.107:5000";
 //const apiUrl: String = "https://hh-mock-api.herokuapp.com"
-
-
 
 export async function getUserData(token, uid) {
   return axios({
@@ -21,7 +19,6 @@ export async function getUserData(token, uid) {
     })
     .catch((error) => {
       console.log(error);
-     
     });
 }
 
@@ -63,6 +60,7 @@ export async function getAIResponse(messages, userData, timeZone) {
   // decrypt user context
   const user_context = await decryptString(userData.context.content || "");
 
+  console.log("user context:", user_context);
   console.log(user_context);
   const therapist = therapists.find(
     (therapist) => therapist.name === userData.therapist
@@ -159,10 +157,8 @@ export async function endSession(user, userData) {
       userData.active_session.chat_log.length - 1
     ];
 
-  console.log(last_message);
   const end_date =
     last_message?.timestamp || userData.active_session.start_time;
-  console.log(end_date);
 
   const session_data = {
     end_date: end_date,
@@ -194,12 +190,9 @@ export async function processSession(user, userData, sessionData) {
    *
    */
 
-  console.log("processing session");
-
   const token = await user.getIdToken();
 
   const decrypted_context = await decryptString(userData.context.content || "");
-  console.log(decrypted_context);
   const new_context = await axios({
     method: "post",
     url: apiUrl + "/ai/generate_context",

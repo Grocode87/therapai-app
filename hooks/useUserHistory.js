@@ -23,8 +23,6 @@ export function useUserHistory() {
       if (user) {
         const token = await user.getIdToken();
         const response = await getUserHistory(token, user.uid);
-        console.log(response);
-        console.log(response.by_month);
         setHistory(response);
         setLoading(false);
       }
