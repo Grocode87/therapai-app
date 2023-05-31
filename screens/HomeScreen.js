@@ -226,7 +226,8 @@ const HomeScreen = ({ navigation }) => {
                   Continue Conversation?
                 </Text>
                 <Text style={{ paddingTop: 10 }}>
-                  From {moment(userData.active_session.start_time).fromNow()}
+                  From{" "}
+                  {moment(userData.active_session.start_time).local().fromNow()}
                 </Text>
               </View>
             </BlurView>

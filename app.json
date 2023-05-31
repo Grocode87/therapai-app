@@ -17,7 +17,7 @@
     ],
     "ios": {
       "supportsTablet": false,
-      "buildNumber": "6",
+      "buildNumber": "7",
       "bundleIdentifier": "com.grobbed.therap",
       "googleServicesFile": "./GoogleService-Info.plist"
     },

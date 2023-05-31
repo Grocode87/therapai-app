@@ -7,9 +7,7 @@ const TherapistImage = ({ therapist }) => {
       style={{
         flex: 1,
         alignItems: "center",
-        backgroundColor: "white",
         padding: 5,
-        borderRadius: 10,
       }}
     >
       <Image
@@ -17,7 +15,6 @@ const TherapistImage = ({ therapist }) => {
           width: "100%",
           height: "100%",
           aspectRatio: 1,
-          borderRadius: 50,
         }}
         source={therapist?.image}
       />

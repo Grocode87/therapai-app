@@ -23,7 +23,14 @@ import { useUserData } from "../hooks/useUserData";
 const TraitScale = ({ trait, level }) => {
   return (
     <View style={{ width: "100%" }}>
-      <Text style={{ textAlign: "center", color: "white", marginBottom: 2 }}>
+      <Text
+        style={{
+          textAlign: "center",
+          color: "white",
+          marginBottom: 5,
+          fontWeight: "500",
+        }}
+      >
         {trait?.name}
       </Text>
       <View
@@ -34,12 +41,13 @@ const TraitScale = ({ trait, level }) => {
           alignItems: "center",
         }}
       >
-        <View style={{ width: 2, height: "100%", backgroundColor: "white" }} />
         <View
           style={{
-            width: (level * 10 - 1.5).toString() + "%",
-            height: 2,
+            width: (level * 10 - 1).toString() + "%",
+            height: "100%",
             backgroundColor: "white",
+            borderTopLeftRadius: 10,
+            borderBottomLeftRadius: 10,
           }}
         />
         <View
@@ -47,16 +55,23 @@ const TraitScale = ({ trait, level }) => {
         />
         <View
           style={{
-            width: ((10 - level) * 10 - 1.5).toString() + "%",
-            height: 2,
+            width: ((10 - level) * 10 - 1).toString() + "%",
+            height: "100%",
             backgroundColor: "white",
+            borderTopRightRadius: 10,
+            borderBottomRightRadius: 10,
           }}
         />
-        <View style={{ width: 2, height: "100%", backgroundColor: "white" }} />
       </View>
-      <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
-        <Text style={{ color: "white" }}>{trait?.low}</Text>
+      <View
+        style={{
+          flexDirection: "row",
+          justifyContent: "space-between",
+          paddingTop: 5,
+        }}
+      >
         <Text style={{ color: "white" }}>{trait?.high}</Text>
+        <Text style={{ color: "white" }}>{trait?.low}</Text>
       </View>
     </View>
   );
