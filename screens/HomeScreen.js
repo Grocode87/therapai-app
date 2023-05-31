@@ -227,7 +227,10 @@ const HomeScreen = ({ navigation }) => {
                 </Text>
                 <Text style={{ paddingTop: 10 }}>
                   From{" "}
-                  {moment(userData.active_session.start_time).local().fromNow()}
+                  {moment
+                    .utc(userData.active_session.start_time)
+                    .local()
+                    .fromNow()}
                 </Text>
               </View>
             </BlurView>
