@@ -12,7 +12,10 @@ import {
   View,
 } from "react-native";
 import { useQuery } from "@tanstack/react-query";
-import { SafeAreaView } from "react-native-safe-area-context";
+import {
+  SafeAreaView,
+  useSafeAreaInsets,
+} from "react-native-safe-area-context";
 import { useAuth } from "../context/authContext";
 import { BlurView } from "expo-blur";
 import { LinearGradient } from "expo-linear-gradient";
@@ -36,17 +39,21 @@ const HomeScreen = ({ navigation }) => {
       enabled: user != null,
     }
   );
-
-  // for the animated header
-  const scrollY = useRef(new Animated.Value(0)).current;
-  const HEADER_MAX_HEIGHT = 180;
-  const HEADER_MIN_HEIGHT = 140;
-  const HEADER_SCROLL_DISTANCE = HEADER_MAX_HEIGHT - HEADER_MIN_HEIGHT;
+  const insets = useSafeAreaInsets();
 
   // For the continue conversation button
-  const AnimatedBlurView = Animated.createAnimatedComponent(BlurView);
   const continueConvoTranslateY = useRef(new Animated.Value(0)).current;
   const [scrollDirection, setScrollDirection] = useState("up");
+
+  // for the animated header
+  const [showLargeHeader, setShowLargeHeader] = useState(true);
+  const HEADER_MIN_HEIGHT = 40 + insets.top;
+  const HEADER_MAX_HEIGHT = 180;
+  const bigHeaderTranslateY = useRef(new Animated.Value(0)).current;
+  const smallHeaderOpacity = useRef(new Animated.Value(0)).current;
+  const smallHeaderHeight = useRef(
+    new Animated.Value(HEADER_MIN_HEIGHT - 20)
+  ).current;
 
   useEffect(() => {
     // Animate the continue conversation button based on scroll direction
@@ -58,55 +65,38 @@ const HomeScreen = ({ navigation }) => {
     }).start();
   }, [scrollDirection, continueConvoTranslateY]);
 
+  useEffect(() => {
+    Animated.timing(bigHeaderTranslateY, {
+      toValue: showLargeHeader ? 0 : -150,
+      duration: 100,
+      useNativeDriver: true,
+    }).start();
+
+    Animated.timing(smallHeaderOpacity, {
+      toValue: showLargeHeader ? 0 : 1,
+      duration: 200,
+      useNativeDriver: true,
+    }).start();
+
+    Animated.timing(smallHeaderHeight, {
+      toValue: showLargeHeader ? HEADER_MIN_HEIGHT - 20 : HEADER_MIN_HEIGHT,
+      duration: 50,
+      useNativeDriver: false,
+    }).start();
+  }, [showLargeHeader]);
+
   const handleOnScroll = (event) => {
     /**
-     * sets scroll direction and updates scrollY value
+     * sets scroll direction and showLargeHeader
      */
-    Animated.event([{ nativeEvent: { contentOffset: { y: scrollY } } }], {
-      useNativeDriver: false,
-    })(event);
+
+    // Decide whether to show the large header or not
+    setShowLargeHeader(event.nativeEvent.contentOffset.y <= 40);
 
     // Handle the new scroll direction
     const currentOffset = event.nativeEvent.contentOffset.y;
     const direction = currentOffset > 1 ? "down" : "up";
     setScrollDirection(direction);
-  };
-
-  const headerHeight = scrollY.interpolate({
-    inputRange: [0, HEADER_SCROLL_DISTANCE],
-    outputRange: [HEADER_MAX_HEIGHT, HEADER_MIN_HEIGHT],
-    extrapolate: "clamp",
-  });
-
-  const separatorOpacity = scrollY.interpolate({
-    inputRange: [0, HEADER_SCROLL_DISTANCE],
-    outputRange: [0, 1],
-    extrapolate: "clamp",
-  });
-
-  const blurIntensity = scrollY.interpolate({
-    inputRange: [0, HEADER_SCROLL_DISTANCE],
-    outputRange: [0, 80],
-    extrapolate: "clamp",
-  });
-
-  const headerStyle = {
-    height: headerHeight,
-    blurRadius: 10,
-    position: "absolute",
-    top: 0,
-    left: 0,
-    right: 0,
-  };
-
-  const separatorStyle = {
-    opacity: 0,
-    height: 1,
-    backgroundColor: "white",
-    position: "absolute",
-    bottom: 0,
-    left: 0,
-    right: 0,
   };
 
   useEffect(() => {
@@ -244,6 +234,80 @@ const HomeScreen = ({ navigation }) => {
         </Animated.View>
       )}
 
+      {/** CUSTOM HEADER */}
+      <Animated.View
+        style={{
+          position: "absolute",
+          top: HEADER_MIN_HEIGHT - 20,
+          left: 0,
+          right: 0,
+
+          paddingBottom: 20,
+          paddingHorizontal: 20,
+          backgroundColor: "#89CFF0",
+
+          flex: 1,
+          flexDirection: "column",
+          justifyContent: "flex-end",
+          transform: [{ translateY: bigHeaderTranslateY }],
+        }}
+      >
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
+        >
+          <Text style={styles.intro_line_1}>Hey {userData.first_name},</Text>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => navigation.navigate("Settings")}
+          >
+            <Ionicons name="ios-settings-outline" size={24} color="white" />
+          </TouchableOpacity>
+        </View>
+        <Text style={styles.intro_line_2}>Let's make today a good day</Text>
+      </Animated.View>
+
+      <Animated.View
+        style={{
+          height: smallHeaderHeight,
+          position: "absolute",
+          top: 0,
+          left: 0,
+          right: 0,
+
+          paddingHorizontal: 20,
+          paddingBottom: 10,
+
+          backgroundColor: "#89CFF0",
+          borderColor: "#2291C5",
+
+          flexDirection: "column",
+          justifyContent: "flex-end",
+          alignItems: "center",
+          zIndex: 100,
+        }}
+      >
+        <Animated.View
+          style={{
+            opacity: smallHeaderOpacity,
+          }}
+        >
+          <Text
+            style={{
+              color: "white",
+              fontSize: 18,
+              fontWeight: "600",
+            }}
+          >
+            Lorem
+          </Text>
+        </Animated.View>
+      </Animated.View>
+
+      {/** 
       <Animated.View style={headerStyle}>
         <AnimatedBlurView
           style={{
@@ -273,8 +337,9 @@ const HomeScreen = ({ navigation }) => {
           </View>
           <Text style={styles.intro_line_2}>Let's make today a good day</Text>
         </AnimatedBlurView>
-        <Animated.View style={separatorStyle} />
+        <Animated.View style={separatorStyle} /> 
       </Animated.View>
+          */}
     </View>
   );
 };

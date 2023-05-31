@@ -154,8 +154,14 @@ const RootNavigator = () => {
     userData?.first_name && userData?.last_name && userData?.birthday;
 
   return (
-    <RootStack.Navigator headerMode="none" headerShown={false}>
-      {loading ? (
+    <RootStack.Navigator
+      headerMode="none"
+      headerShown={false}
+      screenOptions={{
+        stackAnimation: "none", // This disables animation for all screens
+      }}
+    >
+      {loading || (user && userDataLoading) ? (
         <RootStack.Screen
           name="Splash"
           component={SplashScreen}

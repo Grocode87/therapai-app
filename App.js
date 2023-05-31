@@ -1,11 +1,13 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { StatusBar } from "expo-status-bar";
-import { useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import SlidingAlert from "./components/SlidingAlert";
 import { AlertProvider } from "./context/alertContext";
 import { AuthProvider } from "./context/authContext";
+import { useUserData } from "./hooks/useUserData";
+import * as SplashScreen from "expo-splash-screen";
 import Navigation from "./navigation";
 
 const queryClient = new QueryClient();

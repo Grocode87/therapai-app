@@ -67,10 +67,10 @@ const SettingsScreen = () => {
   });
 
   const handlePrivacyPolicyPress = () => {
-    Linking.openURL("https://www.therapai.ca/privacy-policy");
+    Linking.openURL("https://therapai-site.vercel.app/privacy-policy");
   };
   const handleToSPress = () => {
-    Linking.openURL("https://www.therapai.ca/terms-of-service");
+    Linking.openURL("https://therapai-site.vercel.app/terms-of-service");
   };
   const handleFeedbackPress = () => {
     Linking.openURL("https://wp6snie0e0s.typeform.com/to/VAFQVe5m");
@@ -97,7 +97,7 @@ const SettingsScreen = () => {
               contentRight={userData.last_name}
             />
             <SettingsItemInfo
-              contentLeft="Birthday"
+              contentLeft="Birthdate"
               contentRight={formatDate(new Date(userData.birthday))}
             />
           </SettingsSection>
@@ -147,10 +147,10 @@ const SettingsScreen = () => {
 const styles = StyleSheet.create({
   container: {
     paddingTop: 110,
-    paddingHorizontal: 5,
+    paddingHorizontal: 0,
   },
   sectionHeader: {
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: "bold",
     color: "white",
     marginBottom: 10,
@@ -158,13 +158,12 @@ const styles = StyleSheet.create({
     paddingLeft: 10,
   },
   sectionChildrenWrapper: {
-    gap: 3,
+    gap: 1,
   },
   settingsItem: {
     backgroundColor: "#57A0E4",
     padding: 20,
     paddingVertical: 15,
-    borderRadius: 10,
   },
   settingsItemInfo: {
     flexDirection: "row",

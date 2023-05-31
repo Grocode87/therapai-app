@@ -86,7 +86,9 @@ const TherapistDetailScreen = ({ navigation, route }) => {
   const onSelect = async () => {
     // set this as user's therapist
     setLoading(true);
-    await endSession(user, userData);
+    if (userData && userData.active_session) {
+      await endSession(user, userData);
+    }
     await updateUserMutation.mutateAsync({ therapist: therapist.name });
     navigation.dispatch(
       CommonActions.reset({

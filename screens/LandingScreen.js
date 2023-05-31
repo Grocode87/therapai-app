@@ -4,6 +4,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import React, { useState } from "react";
 import {
   StyleSheet,
+  Linking,
   Text,
   View,
   TextInput,
@@ -17,7 +18,7 @@ function LandingScreen({ navigation }) {
     <LinearGradient colors={["#89CFF0", "#2291C5"]} style={{ flex: 1 }}>
       <View style={styles.container}>
         <View style={styles.topContainer}>
-          <Text style={styles.title}>Therap</Text>
+          <Text style={styles.title}>Lorem</Text>
           <Text style={styles.subTitle}>AI Powered Therapy</Text>
         </View>
 
@@ -41,7 +42,28 @@ function LandingScreen({ navigation }) {
           </CustomButton>
           <Text style={styles.agreeText}>
             By clicking "Sign up with phone #", you acknowledge that you have
-            read the Privacy Policy and agree with our Terms of Service
+            read the{" "}
+            <Text
+              style={styles.agreeTextBold}
+              onPress={() => {
+                Linking.openURL(
+                  "https://therapai-site.vercel.app/privacy-policy"
+                );
+              }}
+            >
+              Privacy Policy
+            </Text>{" "}
+            and agree with our{" "}
+            <Text
+              style={styles.agreeTextBold}
+              onPress={() => {
+                Linking.openURL(
+                  "https://therapai-site.vercel.app/terms-of-service"
+                );
+              }}
+            >
+              Terms of Service
+            </Text>
           </Text>
         </View>
       </View>
@@ -76,10 +98,15 @@ const styles = StyleSheet.create({
     paddingHorizontal: 30,
   },
   agreeText: {
-    fontSize: 11,
+    fontSize: 12,
+    lineHeight: 18,
     textAlign: "center",
     color: "#fff",
     marginTop: 5,
+  },
+  agreeTextBold: {
+    fontWeight: "bold",
+    color: "white",
   },
   button: {
     width: "100%",

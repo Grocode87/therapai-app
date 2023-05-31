@@ -3,21 +3,21 @@ import { useAlert } from "../context/alertContext";
 import { useAuth } from "../context/authContext";
 import { getUserData } from "../services/api";
 
-export const useUserData = () => {
+import * as SplashScreen from "expo-splash-screen";
 
-    const { user } = useAuth();
+export const useUserData = () => {
+  const { user } = useAuth();
 
   const { data: userData, isLoading: userDataLoading } = useQuery(
     ["userData"],
     async () => {
-      console.log("fetching user data")
       const token = await user.getIdToken();
-      return getUserData(token, user.uid);    
+      return getUserData(token, user.uid);
     },
     {
       enabled: user != null,
     }
   );
 
-  return { userData, userDataLoading}
-}
+  return { userData, userDataLoading };
+};

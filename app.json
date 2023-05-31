@@ -1,29 +1,30 @@
 {
   "expo": {
-    "name": "Therapai",
+    "name": "Lorem",
     "slug": "therap",
     "description": "An AI powered therapy app",
-    "version": "1.0.1",
+    "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
-      "backgroundColor": "#499A90"
+      "backgroundColor": "#89CFF0"
     },
     "assetBundlePatterns": [
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true,
+      "supportsTablet": false,
+      "buildNumber": "6",
       "bundleIdentifier": "com.grobbed.therap",
       "googleServicesFile": "./GoogleService-Info.plist"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
+        "backgroundColor": "#89CFF0"
       },
       "googleServicesFile": "./google-services.json"
     },

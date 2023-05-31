@@ -8,23 +8,26 @@ import {
   TextInput,
   Pressable,
   SafeAreaView,
+  ActivityIndicator,
 } from "react-native";
 
 import { LinearGradient } from "expo-linear-gradient";
 
 import { useAlert } from "../context/alertContext";
 import { useAuth } from "../context/authContext";
+import CustomButton from "../components/CustomButton";
 
 function VerifyScreen({ navigation, route }) {
   const textInputRef = useRef(null);
   const [code, setCode] = useState("");
 
   const [timeUntilResend, setTimeUntilResend] = useState(120);
+  const [isLoadingConfirm, setIsLoadingConfirm] = useState(false);
+  const [isLoadingResend, setIsLoadingResend] = useState(false);
 
-  const { user, signInWithPhoneNumber, confirmCode } = useAuth()
+  const { user, signInWithPhoneNumber, confirmCode } = useAuth();
 
   const phoneNumber = route.params.phoneNumber;
-
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -36,11 +39,15 @@ function VerifyScreen({ navigation, route }) {
   }, []);
 
   const handleResendCode = async () => {
-    await signInWithPhoneNumber("+" + phoneNumber)
+    setIsLoadingResend(true);
+    await signInWithPhoneNumber("+" + phoneNumber);
+    setIsLoadingResend(false);
   };
 
   const handleSubmitCode = async (verificationCode) => {
-    await confirmCode(verificationCode)
+    setIsLoadingConfirm(true);
+    await confirmCode(verificationCode);
+    setIsLoadingConfirm(false);
   };
 
   return (
@@ -78,9 +85,28 @@ function VerifyScreen({ navigation, route }) {
             width: "100%",
             flexDirection: "row",
             gap: 10,
+            paddingBottom: 50,
+            position: "relative",
+            justifyContent: "center", // Add this line
+            alignItems: "center", // Add this line
           }}
         >
-          <View></View>
+          <View
+            style={{
+              position: "absolute",
+              width: 15,
+              height: 15,
+              bottom: 0,
+            }}
+          >
+            {isLoadingConfirm && (
+              <ActivityIndicator
+                size="small"
+                color="#ffffff"
+                style={{ width: "100%", height: "100%" }} // Add this line
+              />
+            )}
+          </View>
           {[...Array(6).keys()].map((i) => {
             return (
               <View
@@ -101,27 +127,27 @@ function VerifyScreen({ navigation, route }) {
           })}
         </View>
 
-        <Pressable
+        <View
           style={{
             width: "100%",
-            height: 45,
-            borderRadius: 20,
-            alignItems: "center",
-            justifyContent: "center",
             marginVertical: 5,
-            backgroundColor: "#3f3f3f",
             marginBottom: 315,
             marginTop: 120,
-            opacity: timeUntilResend > 0 ? 0.5 : 1,
+            alignItems: "center",
+            justifyContent: "center",
           }}
-          onPress={handleResendCode}
         >
-          <Text style={{ color: "white" }}>
-            {timeUntilResend > 0
-              ? "Resend Code In " + timeUntilResend
-              : "Resend Code"}
-          </Text>
-        </Pressable>
+          <CustomButton
+            text={
+              timeUntilResend > 0
+                ? "Resend Code In " + timeUntilResend
+                : "Resend Code"
+            }
+            onPress={handleResendCode}
+            disabled={timeUntilResend > 0}
+            isLoading={isLoadingResend}
+          />
+        </View>
       </SafeAreaView>
     </LinearGradient>
   );

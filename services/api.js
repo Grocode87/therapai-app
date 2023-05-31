@@ -2,10 +2,12 @@ import axios from "axios";
 import { therapists } from "../utils/constants";
 import { decryptString, encryptString } from "./encrypt";
 
-const apiUrl = "http://192.168.0.107:5000";
+const apiUrl = "https://whale-app-bd76v.ondigitalocean.app";
 //const apiUrl: String = "https://hh-mock-api.herokuapp.com"
 
 export async function getUserData(token, uid) {
+  console.log("getUserData called");
+
   return axios({
     method: "get",
     url: apiUrl + "/user/" + uid,
