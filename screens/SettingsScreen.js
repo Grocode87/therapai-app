@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { LinearGradient } from "expo-linear-gradient";
 import {
+  Alert,
   Linking,
   ScrollView,
   StyleSheet,
@@ -11,8 +12,9 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useAuth } from "../context/authContext";
-import { getUserData } from "../services/api";
+import { deleteUser, getUserData } from "../services/api";
 import { formatDate } from "../utils/utils";
+import { useAlert } from "../context/alertContext";
 
 const SettingsItemInfo = ({ contentLeft, contentRight, onPress }) => {
   return (
@@ -66,6 +68,8 @@ const SettingsScreen = () => {
     return getUserData(token, user.uid);
   });
 
+  const { setAlert } = useAlert();
+
   const handlePrivacyPolicyPress = () => {
     Linking.openURL("https://therapai-site.vercel.app/privacy-policy");
   };
@@ -77,6 +81,46 @@ const SettingsScreen = () => {
   };
   const handleContactSupportPress = () => {
     Linking.openURL("mailto:support@therapai.ca");
+  };
+
+  const handleDeleteAccountPress = () => {
+    // Pop up alert that asks if they are sure they want to delete their account
+    // If yes, delete account
+    // If no, do nothing
+
+    Alert.alert(
+      "Delete Account",
+      "Are you sure you want to delete your account? This action cannot be undone.",
+      [
+        {
+          text: "Cancel",
+          onPress: () => console.log("Cancel Pressed"),
+          style: "cancel",
+        },
+        {
+          text: "Yes",
+          style: "destructive",
+          onPress: async () => {
+            // Delete account
+            await handleDeleteUser();
+          },
+        },
+      ]
+    );
+  };
+
+  const handleDeleteUser = async () => {
+    const token = await user.getIdToken();
+    const response = await deleteUser(token, user.uid);
+
+    logout();
+
+    setAlert({
+      show: true,
+      title: "Account Deleted",
+      message: "Your account has succesfully been deleted.",
+      type: "success",
+    });
   };
 
   const handleSignOutPress = () => {
@@ -136,6 +180,10 @@ const SettingsScreen = () => {
             <SettingsItemInfo
               contentLeft="Sign Out"
               onPress={handleSignOutPress}
+            />
+            <SettingsItemInfo
+              contentLeft="Delete Account"
+              onPress={handleDeleteAccountPress}
             />
           </SettingsSection>
         </SafeAreaView>

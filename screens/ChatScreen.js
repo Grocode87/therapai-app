@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import {
+  ActivityIndicator,
   Alert,
   Animated,
   FlatList,
@@ -36,6 +37,7 @@ const ChatScreen = ({ navigation }) => {
   const [text, onChangeText] = useState("");
   const [messages, setMessages] = useState([]);
   const [aiTyping, setAiTyping] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   const { user } = useAuth();
   const { data: userData } = useQuery(
@@ -47,6 +49,7 @@ const ChatScreen = ({ navigation }) => {
     {
       onSuccess: (data) => {
         if (data.active_session) {
+          setLoading(false);
           setMessages(data.active_session.chat_log);
         }
       },
@@ -256,31 +259,52 @@ const ChatScreen = ({ navigation }) => {
             onScroll={handleScroll}
             scrollEventThrottle={16}
           >
-            <View
-              style={{
-                flex: 1,
-                flexDirection: "column",
-                paddingHorizontal: 10,
-                gap: 20,
-                paddingTop: 20,
-              }}
-            >
-              {messages.map((message, idx) => (
-                <ChatBubble
-                  content={message.content}
-                  author={
-                    message.author == "Bot"
-                      ? userData.active_session.therapist
-                      : "Me"
-                  }
-                  key={idx}
-                ></ChatBubble>
-              ))}
-              <TypingIndicator show={aiTyping} />
-              <Animated.View
-                style={{ height: chatBottomSpace }}
-              ></Animated.View>
-            </View>
+            {loading ? (
+              <View>
+                <ActivityIndicator
+                  size="small"
+                  color="#ffffff"
+                  style={{ width: "100%", height: "100%", paddingTop: 50 }} // Add this line
+                />
+              </View>
+            ) : (
+              <View
+                style={{
+                  flex: 1,
+                  flexDirection: "column",
+                  paddingHorizontal: 10,
+                  gap: 20,
+                  paddingTop: 20,
+                }}
+              >
+                <Text
+                  style={{
+                    color: "white",
+                    fontSize: 12,
+                    paddingHorizontal: 10,
+                    textAlign: "center",
+                  }}
+                >
+                  {userData.active_session.therapist} is an AI that may produce
+                  inaccurate information about people, places, or facts.
+                </Text>
+                {messages.map((message, idx) => (
+                  <ChatBubble
+                    content={message.content}
+                    author={
+                      message.author == "Bot"
+                        ? userData.active_session.therapist
+                        : "Me"
+                    }
+                    key={idx}
+                  ></ChatBubble>
+                ))}
+                <TypingIndicator show={aiTyping} />
+                <Animated.View
+                  style={{ height: chatBottomSpace }}
+                ></Animated.View>
+              </View>
+            )}
           </ScrollView>
         </LinearGradient>
       </View>

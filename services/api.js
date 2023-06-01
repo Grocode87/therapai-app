@@ -24,6 +24,23 @@ export async function getUserData(token, uid) {
     });
 }
 
+export async function deleteUser(token, uid) {
+  return axios({
+    method: "delete",
+    url: apiUrl + "/user/" + uid,
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: token,
+    },
+  })
+    .then((response) => {
+      return response.data;
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+}
+
 export async function getUserHistory(token, uid) {
   return axios({
     method: "get",

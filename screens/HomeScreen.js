@@ -138,7 +138,7 @@ const HomeScreen = ({ navigation }) => {
                 <View style={{ width: "35%" }}>
                   <TherapistImage
                     therapist={therapists.find(
-                      (therapist) => therapist.name === userData.therapist
+                      (therapist) => therapist.name === userData?.therapist
                     )}
                   />
                 </View>
@@ -151,7 +151,7 @@ const HomeScreen = ({ navigation }) => {
                   }}
                 >
                   <Text style={{ fontSize: 20, color: "white" }}>
-                    {userData.therapist || "None"}
+                    {userData?.therapist || "None"}
                   </Text>
                   <Pressable
                     onPress={() =>

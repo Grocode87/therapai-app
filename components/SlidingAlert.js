@@ -53,7 +53,7 @@ const SlidingAlert = () => {
       duration: 300,
       useNativeDriver: true,
     }).start(() => {
-      setTimeout(hideAlert, 5000); // auto-hide after 5 seconds
+      setTimeout(hideAlert, 7000); // auto-hide after 5 seconds
     });
   };
 
@@ -94,7 +94,12 @@ const SlidingAlert = () => {
       {...panResponder.panHandlers}
     >
       <View style={styles.errorContent}>
-        <View style={styles.errorColor}></View>
+        <View
+          style={[
+            styles.errorColor,
+            { backgroundColor: alert.type == "error" ? "red" : "green" },
+          ]}
+        ></View>
         <View style={styles.errorTextContent}>
           <Text style={styles.errorTitle}>{alert.title}</Text>
           <Text style={styles.errorMessage}>{alert.message}</Text>

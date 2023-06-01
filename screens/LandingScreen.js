@@ -41,6 +41,10 @@ function LandingScreen({ navigation }) {
             <Text></Text>
           </CustomButton>
           <Text style={styles.agreeText}>
+            Lorem is not meant as a substitute for professional medical advice
+            or therapy
+          </Text>
+          <Text style={styles.agreeText}>
             By clicking "Sign up with phone #", you acknowledge that you have
             read the{" "}
             <Text
